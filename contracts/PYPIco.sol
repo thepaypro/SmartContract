@@ -1,26 +1,31 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.15;
 
 import "./crowdsale/CappedCrowdsale.sol";
 import "./crowdsale/RefundableCrowdsale.sol";
-import "./token/MintableToken.sol";
+import "./StandardCrowdsale.sol";
+import "./PYPToken.sol";
 
 contract PYPIco is CappedCrowdsale, RefundableCrowdsale {
 
-  uint constant public MINIMUM_INVESTMENT = 500 finneys //0.5 eth 
+  uint public constant MINIMUM_INVESTMENT = 500 finney; //0.5 eth 
+  address public constant foundation_wallet = 0x0;
+  address public constant community_reward_wallet = 0x0;
+  address public constant early_investor_wallet = 0x0;
+  address public constant team_wallet = 0x0;
 
   function PYPIco(uint256 _startTime, uint256 _endTime, uint256 _rate, uint256 _goal, uint256 _cap, address _wallet)
     CappedCrowdsale(_cap)
     FinalizableCrowdsale()
     RefundableCrowdsale(_goal)
-    Crowdsale(_startTime, _endTime, _rate, _wallet)
+    StandardCrowdsale(_startTime, _endTime, _rate, _wallet)
   {
     //As goal needs to be met for a successful crowdsale
     //the value needs to less or equal than a cap which is limit for accepted funds
     require(_goal <= _cap);
   }
 
-  function createTokenContract() internal returns (MintableToken) {
-    return new SampleCrowdsaleToken();
+  function createTokenContract() internal returns (PYPToken) {
+    return new PYPToken();
   }
 
   // @return true if the transaction can buy tokens
@@ -49,7 +54,7 @@ contract PYPIco is CappedCrowdsale, RefundableCrowdsale {
   }
 
   
-  // enable token tranferability
+  //// enable token tranferability
   //function enableTokenTransferability() onlyOwner {
   //  require(token != address(0));
   //  token.unpause(); 
@@ -82,7 +87,7 @@ contract PYPIco is CappedCrowdsale, RefundableCrowdsale {
    */
   function finalization() internal {
     uint256 current_total_supply = token.totalSupply();
-    uint256 averate_token_price_per_eth = current_total_supply.div(weiRaised)
+    uint256 averate_token_price_per_eth = current_total_supply.div(weiRaised);
     uint256 total_ico_token_amount = averate_token_price_per_eth.mul(cap);
     uint256 new_total_token_supply = total_ico_token_amount.mul(100).div(40);
     
@@ -103,7 +108,7 @@ contract PYPIco is CappedCrowdsale, RefundableCrowdsale {
 
     assert(token.finishMinting());
     // enable token transferability
-    assert(token.unpause());
+    token.unpause();
   }
 }
 
