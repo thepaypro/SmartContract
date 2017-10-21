@@ -40,11 +40,10 @@ the repository is this: https://github.com/trufflesuite/truffle, just run: 'npm 
 The project are divided in 3 contracts: Token contracts, ICO contract, Vault contract.
 
 ## Token contract
-Implemented using OpenZepplin project with some ajusts for this project. It is a ERC20 compatible token. 
     - total hard cap is set to 20000 eths with goal as 3200 eths
     - The token is pausable in transferability which can be turned on/off by the owner, token transferability is off by default once the contracts is created
 
-ICO contract
+## ICO contract
     - created with all the arguments written in the migration script(goal, cap, starttime, endtime, addresses). 
     - can pause/unpause token transferability
     - can buy tokens once we are in the ico openning window
@@ -52,7 +51,7 @@ ICO contract
     - once the contract is created owner can send pre-ico tokens to their investors until the hard cap is reached or the ico window is closed.
     - the token purchase has different rate as shown in the white paper
 
-Vault contract
+## Vault contract
     - in case of gaol not reached, investor can withdraw their investment 
     - otherwise, the collected funds is transfered to the team address
     
