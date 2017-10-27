@@ -74,6 +74,7 @@ contract('end ico', function(accounts) {
 	it("ico goal not reached", async function() {
 	    // ico start
         addsDayOnEVM(2);
+        await ico.changeRegistrationStatuses([randomGuy3, randomGuy2, randomGuy1], true);
 
         var icoBalanceEthBefore = await web3.eth.getBalance(refund_vault.address);
 		var buying_eth = 10;
@@ -118,6 +119,7 @@ contract('end ico', function(accounts) {
     it("ico goal reached, cap not", async function() {
         // ico start
         addsDayOnEVM(2);
+        await ico.changeRegistrationStatuses([randomGuy3, randomGuy2, randomGuy1], true);
 
         var icoBalanceEthBefore = await web3.eth.getBalance(refund_vault.address);
 		var buying_eth = 10000;
@@ -157,6 +159,7 @@ contract('end ico', function(accounts) {
     it("ico goal reached, cap not", async function() {
         // ico start
         addsDayOnEVM(2);
+        await ico.changeRegistrationStatuses([randomGuy3, randomGuy2, randomGuy1], true);
 
         var icoBalanceEthBefore = await web3.eth.getBalance(refund_vault.address);
 		var buying_eth = 10000;

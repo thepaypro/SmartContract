@@ -73,6 +73,7 @@ contract('Buy token sale', function(accounts) {
 	it("buy token ", async function() {
 	    // test on day 1
 		addsDayOnEVM(2);
+        await ico.changeRegistrationStatuses([randomGuy1, randomGuy2, randomGuy3, randomGuy4, randomGuy5], true);
 		var icoBalanceEthBefore = await web3.eth.getBalance(refund_vault.address);
         var buying_eth = 2;
 		var weiSpend = web3.toWei(buying_eth, "ether");
@@ -134,6 +135,8 @@ contract('Buy token sale', function(accounts) {
 	});
 	it("buy token impossible", async function() {
 	    // buy not being in ico period
+        await ico.changeRegistrationStatuses([randomGuy2, randomGuy1], true);
+
         var weiSpend = web3.toWei(2, "ether");
 		await expectThrow(ico.sendTransaction({from:randomGuy2,value:weiSpend, gasPrice:gasPriceMax}));
 
@@ -147,6 +150,7 @@ contract('Buy token sale', function(accounts) {
 
 	it("buy before sale start => opcode", async function() {
 		var weiSpend = web3.toWei(2, "ether");
+        await ico.changeRegistrationStatuses([randomGuy1], true);
 
 		// buy before sale start 2days before => opcode
 		await expectThrow(ico.sendTransaction({from:randomGuy1,value:weiSpend, gasPrice:gasPriceMax}));
@@ -158,6 +162,7 @@ contract('Buy token sale', function(accounts) {
 
 	it("buy after sale end => opcode", async function() {
 		addsDayOnEVM(40);
+        await ico.changeRegistrationStatuses([randomGuy1], true);
 		var weiSpend = web3.toWei(2, "ether");
 
 		// buy after sale end => opcode
@@ -169,10 +174,30 @@ contract('Buy token sale', function(accounts) {
 
 		var weiSpend1 = web3.toWei(1, "ether");
 		var weiSpend20000ether = web3.toWei(20000, "ether");
+        await ico.changeRegistrationStatuses([randomGuy1, randomGuy2], true);
 
 		await ico.sendTransaction({from:randomGuy1,value:weiSpend20000ether, gasPrice:gasPriceMax});
 
 		// buy overpass total Hard cap =>	opcode
 		await expectThrow(ico.sendTransaction({from:randomGuy2,value:weiSpend1, gasPrice:gasPriceMax}));
 	});
+
+    it("test Whitelist", async function() {
+		addsDayOnEVM(2);
+
+		var weiSpend1 = web3.toWei(1, "ether");
+		var weiSpend200ether = web3.toWei(200, "ether");
+        await ico.changeRegistrationStatuses([randomGuy1], false);
+		await expectThrow(ico.sendTransaction({from:randomGuy2,value:weiSpend1, gasPrice:gasPriceMax}));
+        await ico.changeRegistrationStatuses([randomGuy1], true);
+		await ico.sendTransaction({from:randomGuy1,value:weiSpend200ether, gasPrice:gasPriceMax});
+
+        await ico.changeRegistrationStatus(randomGuy1, false);
+		await expectThrow(ico.sendTransaction({from:randomGuy2,value:weiSpend1, gasPrice:gasPriceMax}));
+        await ico.changeRegistrationStatus(randomGuy1, true);
+		await ico.sendTransaction({from:randomGuy1,value:weiSpend200ether, gasPrice:gasPriceMax});
+
+
+	});
+
 });

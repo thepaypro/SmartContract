@@ -3,9 +3,10 @@ pragma solidity ^0.4.15;
 import "./crowdsale/CappedCrowdsale.sol";
 import "./crowdsale/RefundableCrowdsale.sol";
 import "./StandardCrowdsale.sol";
+import "./WhitelistedCrowdsale.sol";
 import "./PYPToken.sol";
 
-contract PYPIco is CappedCrowdsale, RefundableCrowdsale {
+contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
 
   uint256 public constant MINIMUM_INVESTMENT = 500 finney; //0.5 eth
 

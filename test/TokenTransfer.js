@@ -74,6 +74,7 @@ contract('token transfer', function(accounts) {
 	it("token transfer ", async function() {
 		// ico start
         addsDayOnEVM(2);
+        await ico.changeRegistrationStatuses([randomGuy3, randomGuy2, randomGuy1], true);
 
         var icoBalanceEthBefore = await web3.eth.getBalance(refund_vault.address);
 		var buying_eth = 2;
@@ -109,6 +110,7 @@ contract('token transfer', function(accounts) {
 
         // ico start
         addsDayOnEVM(2);
+        await ico.changeRegistrationStatuses([randomGuy3, randomGuy2, randomGuy1], true);
 		var buying_eth = 2;
 		var weiSpend = web3.toWei(buying_eth, "ether");
 		// buy token within cap should work
