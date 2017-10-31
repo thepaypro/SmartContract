@@ -2,7 +2,7 @@
 
 # Deployment
   - set up all necessary ethereum environment: geth, truffle, we are using the last version of truffle(3.4.9) with support to solidity 4.15
-  - git clone https://bitbucket.org/kkx/pyp.git
+  - git clone https://github.com/thepaypro/SmartContract.git
   - cd pyp
   - run testrpc(for test) or run geth to run a synced node
   - truffle migrate(need to set up your eth accounts there before running the migrate!)
