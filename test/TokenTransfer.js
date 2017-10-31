@@ -111,7 +111,7 @@ contract('token transfer', function(accounts) {
         // ico start
         addsDayOnEVM(2);
         await ico.changeRegistrationStatuses([randomGuy3, randomGuy2, randomGuy1], true);
-		var buying_eth = 2;
+		var buying_eth = 5000;
 		var weiSpend = web3.toWei(buying_eth, "ether");
 		// buy token within cap should work
 		var r = await ico.sendTransaction({from:randomGuy1,value:weiSpend, gasPrice:gasPriceMax});
@@ -119,11 +119,13 @@ contract('token transfer', function(accounts) {
         addsDayOnEVM(40);
         // Transfer token by random  after token sale
 		// admin not finalized ico
-        await expectThrow(token.transfer(randomGuy2, 100, {from:randomGuy1}));
-
+        await expectThrow(token.transfer(randomGuy5, 100, {from:randomGuy1}));
 
         await ico.finalize({from: admin});
-        token.transfer(randomGuy2, 100, {from:randomGuy1});
+        console.log(await ico.goalReached())
+        token.transfer(randomGuy5, 100, {from:randomGuy1});
+        console.log(await token.balanceOf(randomGuy5))
+		assert((new BigNumber(100)).equals(await token.balanceOf(randomGuy5)), "randomGuy5 balance");
 	})
 
 });
