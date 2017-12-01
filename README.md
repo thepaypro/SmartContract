@@ -1,17 +1,19 @@
-# PYP
+<p align="center"><a target="_blank" href="http://www.payproapp.com"><img src="http://www.payproapp.com/PayPro_files/Logo_vertical_PayPro.png" width="240" title="PayPro"></a></p>
+
+<h2 align="center"><a href="http://www.payproapp.com">Smart Contract for PayPro ICO</a></h2>
 
 # Deployment
-  - set up all necessary ethereum environment: geth, truffle, we are using the last version of truffle(3.4.9) with support to solidity 4.15
-  - git clone https://github.com/thepaypro/SmartContract.git
+  - Set up all necessary ethereum environment: geth, truffle, we are using the last version of truffle(3.4.9) with support to solidity 4.15
+  - Git clone https://github.com/thepaypro/SmartContract.git
   - cd pyp
   - run testrpc(for test) or run geth to run a synced node
   - truffle migrate(need to set up your eth accounts there before running the migrate!)
 
 
-# geth
-for example for ubuntu, an instruction can be found here: https://github.com/ethereum/go-ethereum/wiki/Installation-Instructions-for-Ubuntu
+# Geth
+For example for ubuntu, an instruction can be found here: https://github.com/ethereum/go-ethereum/wiki/Installation-Instructions-for-Ubuntu
 
-# truffle
+# Truffle
 the repository is this: https://github.com/trufflesuite/truffle, just run: 'npm install -g truffle'
 
 # Run unitests in local
