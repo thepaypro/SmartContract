@@ -1,3 +1,7 @@
+[![PayPro Logo](http://www.payproapp.com/images/Logo_vertical_PayPro.png)](http://www.payproapp.com)
+
+<h2 align="center"><a href="http://www.payproapp.com">Smart Contract for PayPro ICO</a></h2>
+
 # PYP
 
 # Deployment
