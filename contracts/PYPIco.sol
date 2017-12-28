@@ -56,16 +56,30 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
   // @return current exchange rate 
   function getRate() public constant returns(uint){
     require(now >= startTime);
-    if (now < startTime.add(1 days)){
-      // day 1
+    // if (now < startTime.add(1 days)){
+    //   // day 1
+    //   return base_rate.mul(RATE_FOR_DAY1).div(100);
+    // }else if (now < startTime.add(7 days)){
+    //   // day 2 to day 7
+    //   return base_rate.mul(RATE_FOR_DAY27).div(100);
+    // }else if (now < startTime.add(14 days)){
+    //   // second week
+    //   return base_rate.mul(RATE_FOR_SECOND_WEEK).div(100);
+    // }else if (now < endTime){
+    //   // no discount
+    //   return base_rate;
+    // }
+
+    if (now > startTime.add(7) && now < startTime.add(8 days)){
+      // 15/01/2018 21:00:00 - 16/01/2018 21:00:00
       return base_rate.mul(RATE_FOR_DAY1).div(100);
-    }else if (now < startTime.add(7 days)){
-      // day 2 to day 7
+    }else if (now > startTime.add(8 days) && now < startTime.add(13 days)){
+      // 16/01/2018 21:00:00 - 21/01/2018 21:00:00
       return base_rate.mul(RATE_FOR_DAY27).div(100);
-    }else if (now < startTime.add(14 days)){
-      // second week
+    }else if (now > startTime.add(13 days) && now < startTime.add(20 days)){
+      // 21/01/2018 21:00:00 - 28/01/2018 21:00:00
       return base_rate.mul(RATE_FOR_SECOND_WEEK).div(100);
-    }else if (now < endTime){
+    }else if (now > startTime.add(20 days) && now < endTime){
       // no discount
       return base_rate;
     }
@@ -89,7 +103,10 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
   function transferPreSaleTokens(uint256 _value, address beneficiary) onlyOwner {
     require(beneficiary != address(0));
     require(weiRaised.add(_value) <= cap);
-    require(now <= endTime);
+    require(_value >= 15000000000000000000);//Min. investement 15 ETH
+    // require(now <= endTime);
+    require(now > startTime);
+    require(now <= startTime.add(7 days));
 
     uint256 rate = base_rate.mul(PRESALE_RATE).div(100);
     uint256 tokens = _value.mul(rate);
