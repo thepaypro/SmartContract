@@ -121,28 +121,29 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
   function finalization() internal {
     if (goalReached()) {
         // transfer tokens to teams
-        uint256 current_total_supply = token.totalSupply();
-        uint256 averate_token_price_per_eth = current_total_supply.div(weiRaised);
-        uint256 total_ico_token_amount = averate_token_price_per_eth.mul(cap);
+        uint256 max_token_supply = 25000000;
+        uint256 current_supplied_tokens = token.totalSupply();
+        uint256 max_token_to_sale = max_token_supply.mul(40).div(100);
+
+        // uint256 averate_token_price_per_eth = current_total_supply.div(weiRaised);
+        // uint256 total_ico_token_amount = averate_token_price_per_eth.mul(cap);
         // uint256 new_total_token_supply = total_ico_token_amount.mul(100).div(40);
 
-      if (total_ico_token_amount > current_total_supply){
-        uint256 unsold_ico_token_amount = total_ico_token_amount.sub(current_total_supply);
-        if (unsold_ico_token_amount > 0){
-          token.mint(foundation_wallet, unsold_ico_token_amount);
-        }
+      if (current_supplied_tokens < max_token_to_sale){
+        uint256 unsold_ico_token_amount = max_token_to_sale.sub(current_supplied_tokens);
+        token.mint(foundation_wallet, unsold_ico_token_amount);
       }
 
-        uint256 community_reward_token_amount = total_ico_token_amount.mul(5).div(100);
+        uint256 community_reward_token_amount = max_token_supply.mul(5).div(100);
         token.mint(community_reward_wallet, community_reward_token_amount);
 
-        uint256 early_investor_token_amount = total_ico_token_amount.mul(15).div(100);
+        uint256 early_investor_token_amount = max_token_supply.mul(15).div(100);
         token.mint(early_investor_wallet, early_investor_token_amount);
 
-        uint256 team_token_amount = total_ico_token_amount.mul(20).div(100);
+        uint256 team_token_amount = max_token_supply.mul(20).div(100);
         token.mint(team_wallet, team_token_amount);
 
-        uint256 foundation_token_amount = total_ico_token_amount.mul(20).div(100);
+        uint256 foundation_token_amount = max_token_supply.mul(20).div(100);
         token.mint(foundation_wallet, foundation_token_amount);
 
         // disable minting
