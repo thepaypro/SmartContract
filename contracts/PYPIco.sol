@@ -121,7 +121,7 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
   function finalization() internal {
     if (goalReached()) {
         // transfer tokens to teams
-        uint256 max_token_supply = 25000000;
+        uint256 max_token_supply = 25000000000000000000000000;
         uint256 current_supplied_tokens = token.totalSupply();
         uint256 max_token_to_sale = max_token_supply.mul(40).div(100);
 
