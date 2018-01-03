@@ -8,6 +8,7 @@ import "./PYPToken.sol";
 
 contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
 
+  uint256 public constant MINIMUM_INVESTMENT_PRESALE = 15000 finney; //15 eth
   uint256 public constant MINIMUM_INVESTMENT = 500 finney; //0.5 eth
 
   address public foundation_wallet;
@@ -50,43 +51,38 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
   // @return true if the transaction can buy tokens
   function validPurchase() internal constant returns (bool) {
     bool minimumInvestment = msg.value >= MINIMUM_INVESTMENT;
+
+    if (now > startTime && now < startTime.add(7 days)) {
+      minimumInvestment = msg.value >= MINIMUM_INVESTMENT_PRESALE;
+    }
+
     return super.validPurchase() && minimumInvestment;
   }
 
   // @return current exchange rate 
   function getRate() public constant returns(uint){
     require(now >= startTime);
-    // if (now < startTime.add(1 days)){
-    //   // day 1
-    //   return base_rate.mul(RATE_FOR_DAY1).div(100);
-    // }else if (now < startTime.add(7 days)){
-    //   // day 2 to day 7
-    //   return base_rate.mul(RATE_FOR_DAY27).div(100);
-    // }else if (now < startTime.add(14 days)){
-    //   // second week
-    //   return base_rate.mul(RATE_FOR_SECOND_WEEK).div(100);
-    // }else if (now < endTime){
-    //   // no discount
-    //   return base_rate;
-    // }
 
-    if (now > startTime.add(7) && now < startTime.add(8 days)){
+    if (now > startTime && now < startTime.add(7 days)) {
+      // 08/01/2018 21:00:00 - 15/01/2018 21:00:00
+      return base_rate.mul(PRESALE_RATE).div(100);
+    } else if (now > startTime.add(7 days) && now < startTime.add(8 days)) {
       // 15/01/2018 21:00:00 - 16/01/2018 21:00:00
       return base_rate.mul(RATE_FOR_DAY1).div(100);
-    }else if (now > startTime.add(8 days) && now < startTime.add(13 days)){
+    } else if (now > startTime.add(8 days) && now < startTime.add(13 days)) {
       // 16/01/2018 21:00:00 - 21/01/2018 21:00:00
       return base_rate.mul(RATE_FOR_DAY27).div(100);
-    }else if (now > startTime.add(13 days) && now < startTime.add(20 days)){
+    } else if (now > startTime.add(13 days) && now < startTime.add(20 days)) {
       // 21/01/2018 21:00:00 - 28/01/2018 21:00:00
       return base_rate.mul(RATE_FOR_SECOND_WEEK).div(100);
-    }else if (now > startTime.add(20 days) && now < endTime){
+    } else if (now > startTime.add(20 days) && now < endTime) {
       // no discount
       return base_rate;
     }
+
     return 0;
   }
 
-  
   // enable token tranferability
   function enableTokenTransferability() onlyOwner {
     require(token != address(0));
@@ -128,23 +124,25 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
         uint256 current_total_supply = token.totalSupply();
         uint256 averate_token_price_per_eth = current_total_supply.div(weiRaised);
         uint256 total_ico_token_amount = averate_token_price_per_eth.mul(cap);
-        uint256 new_total_token_supply = total_ico_token_amount.mul(100).div(40);
+        // uint256 new_total_token_supply = total_ico_token_amount.mul(100).div(40);
 
+      if (total_ico_token_amount > current_total_supply){
         uint256 unsold_ico_token_amount = total_ico_token_amount.sub(current_total_supply);
         if (unsold_ico_token_amount > 0){
-            token.mint(foundation_wallet, unsold_ico_token_amount);
+          token.mint(foundation_wallet, unsold_ico_token_amount);
         }
+      }
 
-        uint256 community_reward_token_amount = new_total_token_supply.mul(15).div(100);
+        uint256 community_reward_token_amount = total_ico_token_amount.mul(5).div(100);
         token.mint(community_reward_wallet, community_reward_token_amount);
 
-        uint256 early_investor_token_amount = new_total_token_supply.mul(10).div(100);
+        uint256 early_investor_token_amount = total_ico_token_amount.mul(15).div(100);
         token.mint(early_investor_wallet, early_investor_token_amount);
 
-        uint256 team_token_amount = new_total_token_supply.mul(15).div(100);
+        uint256 team_token_amount = total_ico_token_amount.mul(20).div(100);
         token.mint(team_wallet, team_token_amount);
 
-        uint256 foundation_token_amount = new_total_token_supply.mul(20).div(100);
+        uint256 foundation_token_amount = total_ico_token_amount.mul(20).div(100);
         token.mint(foundation_wallet, foundation_token_amount);
 
         // disable minting
