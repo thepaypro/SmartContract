@@ -49,8 +49,10 @@ contract RefundVault is Ownable {
   function refund(address investor) public {
     require(state == State.Refunding);
     uint256 depositedValue = deposited[investor];
-    deposited[investor] = 0;
-    investor.transfer(depositedValue);
-    Refunded(investor, depositedValue);
+    if (depositedValue > 0) {
+      deposited[investor] = 0;
+      investor.transfer(depositedValue);
+      Refunded(investor, depositedValue);
+    }
   }
 }
