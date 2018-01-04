@@ -96,23 +96,23 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
   }
 
   // transfer pre sale tokend to investors
-  function transferPreSaleTokens(uint256 _value, address beneficiary) onlyOwner {
-    require(beneficiary != address(0));
-    require(weiRaised.add(_value) <= cap);
-    require(_value >= 15000000000000000000);//Min. investement 15 ETH
-    // require(now <= endTime);
-    require(now > startTime);
-    require(now <= startTime.add(7 days));
+  // function transferPreSaleTokens(uint256 _value, address beneficiary) onlyOwner {
+  //   require(beneficiary != address(0));
+  //   require(weiRaised.add(_value) <= cap);
+  //   require(_value >= 15000000000000000000);//Min. investement 15 ETH
+  //   // require(now <= endTime);
+  //   require(now > startTime);
+  //   require(now <= startTime.add(7 days));
 
-    uint256 rate = base_rate.mul(PRESALE_RATE).div(100);
-    uint256 tokens = _value.mul(rate);
-    token.mint(beneficiary, tokens);
+  //   uint256 rate = base_rate.mul(PRESALE_RATE).div(100);
+  //   uint256 tokens = _value.mul(rate);
+  //   token.mint(beneficiary, tokens);
 
-    // update state
-    weiRaised = weiRaised.add(_value);
+  //   // update state
+  //   weiRaised = weiRaised.add(_value);
 
-    TokenPurchase(0x0, beneficiary, _value, tokens);
-  }
+  //   TokenPurchase(0x0, beneficiary, _value, tokens);
+  // }
 
 
   /**
