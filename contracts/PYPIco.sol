@@ -124,7 +124,7 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
         uint256 current_total_supply = token.totalSupply();
         uint256 new_total_token_supply = current_total_supply.mul(100).div(40);
 
-        uint256 community_reward_token_amount = new_total_token_supply.mul(5).div(100);
+        uint256 community_reward_token_amount = 1250000000000000000000000;
         token.mint(community_reward_wallet, community_reward_token_amount);
 
         uint256 early_investor_token_amount = new_total_token_supply.mul(15).div(100);
