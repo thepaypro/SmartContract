@@ -13,8 +13,8 @@ import './token/MintableToken.sol';
  */
 
 contract PYPToken is MintableToken, PausableToken {
-    string  public  constant name = "PYP Token";
-    string  public  constant symbol = "PYP";
+    string  public  constant name = "PIP Token";
+    string  public  constant symbol = "PIP";
     uint8   public  constant decimals = 18;
 
     function PYPToken() {
