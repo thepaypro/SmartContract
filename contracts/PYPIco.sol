@@ -55,7 +55,7 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
 
     if (now > startTime && now < endPreSale) {
       minimumInvestment = msg.value >= MINIMUM_INVESTMENT_PRESALE;
-    }else if (now > endPreSale && now < end3week){
+    } else if (now > endPreSale && now < end3week){
       minimumInvestment = msg.value >= MINIMUM_INVESTMENT_MAIN;
     }
 
@@ -117,7 +117,7 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
     TokenPurchase(0x0, beneficiary, 0, _value);
   }
 
-  function changeMinimumInvestment(uint256 _value){
+  function changeMinimumInvestment(uint256 _value) onlyOwner {
     require(_value > 0);
     MINIMUM_INVESTMENT = _value;
   }
