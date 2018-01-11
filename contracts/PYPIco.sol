@@ -10,7 +10,6 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
 
   uint256 public constant MINIMUM_INVESTMENT_PRESALE = 2000 finney; //2 eth
   uint256 public constant MINIMUM_INVESTMENT_MAIN = 500 finney; //0.5 eth
-  uint256 public MINIMUM_INVESTMENT = 100 finney; //0.1 eth
 
   address public foundation_wallet;
   address public community_reward_wallet;
@@ -51,12 +50,10 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
 
   // @return true if the transaction can buy tokens
   function validPurchase() internal constant returns (bool) {
-    bool minimumInvestment = msg.value >= MINIMUM_INVESTMENT;
+    bool minimumInvestment = msg.value >= MINIMUM_INVESTMENT_MAIN;
 
     if (now > startTime && now < endPreSale) {
       minimumInvestment = msg.value >= MINIMUM_INVESTMENT_PRESALE;
-    } else if (now > endPreSale && now < end3week){
-      minimumInvestment = msg.value >= MINIMUM_INVESTMENT_MAIN;
     }
 
     return super.validPurchase() && minimumInvestment;
@@ -117,10 +114,10 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
     TokenPurchase(0x0, beneficiary, 0, _value);
   }
 
-  function changeMinimumInvestment(uint256 _value) onlyOwner {
-    require(_value > 0);
-    MINIMUM_INVESTMENT = _value;
-  }
+  // function changeMinimumInvestment(uint256 _value) onlyOwner {
+  //   require(_value > 0);
+  //   MINIMUM_INVESTMENT = _value;
+  // }
 
   function changeEndTimePreSale(uint256 _endPreSale) onlyOwner {
     require(_endPreSale >= now && _endPreSale >= startTime && _endPreSale <= end2week );
