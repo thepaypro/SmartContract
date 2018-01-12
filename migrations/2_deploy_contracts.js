@@ -18,7 +18,7 @@ module.exports = function(deployer) {
   // const currentTimeStamp = web3.eth.getBlock(web3.eth.blockNumber).timestamp;
   // const startTimeSolidity = currentTimeStamp + 2*dayInSecond;
   // // const endTimeSolidity   = startTimeSolidity + 30*dayInSecond;
-  const startTimeSolidity = 1515708547;
+  const startTimeSolidity = 1515780000;
 
   const endPreSale = 1516050000;
   const end2week = 1516568400;
