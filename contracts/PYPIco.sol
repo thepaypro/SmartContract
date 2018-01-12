@@ -8,8 +8,8 @@ import "./PYPToken.sol";
 
 contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
 
-  uint256 public constant MINIMUM_INVESTMENT_PRESALE = 15000 finney; //15 eth
-  uint256 public constant MINIMUM_INVESTMENT = 500 finney; //0.5 eth
+  uint256 public MINIMUM_INVESTMENT_PRESALE = 2000 finney; //2 eth
+  uint256 public MINIMUM_INVESTMENT_MAIN = 500 finney; //0.5 eth
 
   address public foundation_wallet;
   address public community_reward_wallet;
@@ -17,17 +17,17 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
   address public team_wallet;
 
   //Token rates
-  uint256 private constant PRESALE_RATE = 135;
-  uint256 private constant RATE_FOR_DAY1 = 120;
-  uint256 private constant RATE_FOR_DAY27  = 115;
-  uint256 private constant RATE_FOR_SECOND_WEEK = 110;
+  uint256 private constant PRESALE_RATE = 150;
+  uint256 private constant RATE_FOR_DAY1 = 130;
+  uint256 private constant RATE_FOR_DAY27  = 120;
+  uint256 private constant RATE_FOR_SECOND_WEEK = 115;
 
 
-  function PYPIco(uint256 _startTime, uint256 _endTime, uint256 _rate, uint256 _goal, uint256 _cap, address _wallet, address _foundation_wallet, address _community_reward_wallet, address _early_investor_wallet, address _team_wallet)
+  function PYPIco(uint256 _startTime, uint256 _endPreSale, uint256 _end2week, uint256 _end3week, uint256 _endTime, uint256 _rate, uint256 _goal, uint256 _cap, address _wallet, address _foundation_wallet, address _community_reward_wallet, address _early_investor_wallet, address _team_wallet)
     CappedCrowdsale(_cap)
     FinalizableCrowdsale()
     RefundableCrowdsale(_goal)
-    StandardCrowdsale(_startTime, _endTime, _rate, _wallet)
+    StandardCrowdsale(_startTime, _endPreSale, _end2week, _end3week, _endTime, _rate, _wallet)
   {
     //As goal needs to be met for a successful crowdsale
     //the value needs to less or equal than a cap which is limit for accepted funds
@@ -50,9 +50,9 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
 
   // @return true if the transaction can buy tokens
   function validPurchase() internal constant returns (bool) {
-    bool minimumInvestment = msg.value >= MINIMUM_INVESTMENT;
+    bool minimumInvestment = msg.value >= MINIMUM_INVESTMENT_MAIN;
 
-    if (now > startTime && now < startTime.add(7 days)) {
+    if (now > startTime && now < endPreSale) {
       minimumInvestment = msg.value >= MINIMUM_INVESTMENT_PRESALE;
     }
 
@@ -63,19 +63,19 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
   function getRate() public constant returns(uint){
     require(now >= startTime);
 
-    if (now > startTime && now < startTime.add(7 days)) {
+    if (now > startTime && now <= endPreSale) {
       // 08/01/2018 21:00:00 - 15/01/2018 21:00:00
       return base_rate.mul(PRESALE_RATE).div(100);
-    } else if (now > startTime.add(7 days) && now < startTime.add(8 days)) {
+    } else if (now > endPreSale && now <= endPreSale.add(1 days)) {
       // 15/01/2018 21:00:00 - 16/01/2018 21:00:00
       return base_rate.mul(RATE_FOR_DAY1).div(100);
-    } else if (now > startTime.add(8 days) && now < startTime.add(13 days)) {
+    } else if (now > endPreSale.add(1 days) && now <= end2week) {
       // 16/01/2018 21:00:00 - 21/01/2018 21:00:00
       return base_rate.mul(RATE_FOR_DAY27).div(100);
-    } else if (now > startTime.add(13 days) && now < startTime.add(20 days)) {
+    } else if (now > end2week && now <= end3week) {
       // 21/01/2018 21:00:00 - 28/01/2018 21:00:00
       return base_rate.mul(RATE_FOR_SECOND_WEEK).div(100);
-    } else if (now > startTime.add(20 days) && now < endTime) {
+    } else if (now > end3week && now < endTime) {
       // no discount
       return base_rate;
     }
@@ -96,24 +96,48 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
   }
 
   // transfer pre sale tokend to investors
-  // function transferPreSaleTokens(uint256 _value, address beneficiary) onlyOwner {
-  //   require(beneficiary != address(0));
-  //   require(weiRaised.add(_value) <= cap);
-  //   require(_value >= 15000000000000000000);//Min. investement 15 ETH
-  //   // require(now <= endTime);
-  //   require(now > startTime);
-  //   require(now <= startTime.add(7 days));
+  function transferPreSaleTokens(uint256 _value, address beneficiary) onlyOwner {
+    require(beneficiary != address(0));
+    require(now > startTime);
 
-  //   uint256 rate = base_rate.mul(PRESALE_RATE).div(100);
-  //   uint256 tokens = _value.mul(rate);
-  //   token.mint(beneficiary, tokens);
+    token.mint(beneficiary, _value);
 
-  //   // update state
-  //   weiRaised = weiRaised.add(_value);
+    TokenPurchase(0x0, beneficiary, 0, _value);
+  }
 
-  //   TokenPurchase(0x0, beneficiary, _value, tokens);
-  // }
+  function changeMinimumInvestment(uint256 _value, uint _type) onlyOwner {
+    require(_value > 0);
 
+    if (_type == 0) {
+      MINIMUM_INVESTMENT_PRESALE = _value;
+    }
+
+    if (_type == 1) {
+      MINIMUM_INVESTMENT_MAIN = _value;
+    }
+  }
+
+  function changeEndTime(uint256 _endTime, uint _type) onlyOwner {
+    if (_type == 0) {
+      require(_endTime >= now && _endTime >= startTime && _endTime <= end2week );
+      endPreSale = _endTime;    
+    }
+
+    if(_type == 1) {
+      require(_endTime >= now && _endTime >= endPreSale.add(1 days) && _endTime <= end3week );
+      end2week = _endTime;
+    }
+
+    if(_type == 2) {
+      require(_endTime >= now && _endTime >= end2week && _endTime <= endTime );
+      end3week = _endTime;
+    }
+
+    if(_type == 3) {
+      require(_endTime >= now && _endTime >= end3week);
+      endTime = _endTime;
+    }
+  }
 
   /**
    * finalization logics, mint fundation tokens proportionally to currently minted amount
@@ -144,4 +168,3 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
     super.finalization();
   }
 }
-
