@@ -23,11 +23,11 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
   uint256 private constant RATE_FOR_SECOND_WEEK = 115;
 
 
-  function PYPIco(uint256 _startTime, uint256 _endPreSale, uint256 _end2week, uint256 _end3week, uint256 _endTime, uint256 _rate, uint256 _goal, uint256 _cap, address _wallet, address _foundation_wallet, address _community_reward_wallet, address _early_investor_wallet, address _team_wallet)
+  function PYPIco(uint256 _startTime, uint256 _endTime, uint256 _rate, uint256 _goal, uint256 _cap, address _wallet, address _foundation_wallet, address _community_reward_wallet, address _early_investor_wallet, address _team_wallet)
     CappedCrowdsale(_cap)
     FinalizableCrowdsale()
     RefundableCrowdsale(_goal)
-    StandardCrowdsale(_startTime, _endPreSale, _end2week, _end3week, _endTime, _rate, _wallet)
+    StandardCrowdsale(_startTime, _endTime, _rate, _wallet)
   {
     //As goal needs to be met for a successful crowdsale
     //the value needs to less or equal than a cap which is limit for accepted funds
@@ -52,7 +52,7 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
   function validPurchase() internal constant returns (bool) {
     bool minimumInvestment = msg.value >= MINIMUM_INVESTMENT_MAIN;
 
-    if (now > startTime && now < endPreSale) {
+    if (now > startTime && now < endTime) {
       minimumInvestment = msg.value >= MINIMUM_INVESTMENT_PRESALE;
     }
 
@@ -62,25 +62,7 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
   // @return current exchange rate 
   function getRate() public constant returns(uint){
     require(now >= startTime);
-
-    if (now > startTime && now <= endPreSale) {
-      // 08/01/2018 21:00:00 - 15/01/2018 21:00:00
-      return base_rate.mul(PRESALE_RATE).div(100);
-    } else if (now > endPreSale && now <= endPreSale.add(1 days)) {
-      // 15/01/2018 21:00:00 - 16/01/2018 21:00:00
-      return base_rate.mul(RATE_FOR_DAY1).div(100);
-    } else if (now > endPreSale.add(1 days) && now <= end2week) {
-      // 16/01/2018 21:00:00 - 21/01/2018 21:00:00
-      return base_rate.mul(RATE_FOR_DAY27).div(100);
-    } else if (now > end2week && now <= end3week) {
-      // 21/01/2018 21:00:00 - 28/01/2018 21:00:00
-      return base_rate.mul(RATE_FOR_SECOND_WEEK).div(100);
-    } else if (now > end3week && now < endTime) {
-      // no discount
-      return base_rate;
-    }
-
-    return 0;
+    return base_rate;
   }
 
   // enable token tranferability
@@ -117,26 +99,9 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
     }
   }
 
-  function changeEndTime(uint256 _endTime, uint _type) onlyOwner {
-    if (_type == 0) {
-      require(_endTime >= now && _endTime >= startTime && _endTime <= end2week );
-      endPreSale = _endTime;    
-    }
-
-    if(_type == 1) {
-      require(_endTime >= now && _endTime >= endPreSale.add(1 days) && _endTime <= end3week );
-      end2week = _endTime;
-    }
-
-    if(_type == 2) {
-      require(_endTime >= now && _endTime >= end2week && _endTime <= endTime );
-      end3week = _endTime;
-    }
-
-    if(_type == 3) {
-      require(_endTime >= now && _endTime >= end3week);
-      endTime = _endTime;
-    }
+  function changeEndTime(uint256 _endTime) onlyOwner {
+    require(_endTime >= now && _endTime >= startTime);
+    endTime = _endTime;
   }
 
   /**

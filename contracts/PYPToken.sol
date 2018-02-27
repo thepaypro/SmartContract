@@ -17,8 +17,18 @@ contract PYPToken is MintableToken, PausableToken {
     string  public  constant symbol = "PIP";
     uint8   public  constant decimals = 18;
 
+    event WalletBlocked(address target, bool isRegistered);
+
     function PYPToken() {
         //Set token transfer paused
         paused = true;
+    }
+
+    function addBlocked(address target, bool isRegistered)
+        public
+        onlyOwner
+    {
+        blockeds[target] = isRegistered;
+        WalletBlocked(target, isRegistered);
     }
 }

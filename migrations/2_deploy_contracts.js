@@ -2,7 +2,7 @@ var ico = artifacts.require("./PYPIco.sol");
 
 module.exports = function(deployer) {
   var _rate = 2000;
-  var _cap = web3.toWei(50, 'ether');
+  var _cap = web3.toWei(0, 'ether');
   var _goal = web3.toWei(0, 'ether');
 
   // var _wallet = 0x4A5446ACE419aF2261D1C0B599E59a09e67b1C41;
@@ -18,11 +18,8 @@ module.exports = function(deployer) {
   var early_investor_wallet = web3.eth.accounts[3];
   var team_wallet = web3.eth.accounts[4];
 
-  const startTimeSolidity = 1519780000;
-  const endPreSale = 1520850000;
-  const end2week = 1521968400;
-  const end3week = 1522173200;
-  const endTimeSolidity = 1523774400;
+  const startTimeSolidity = 1519843407;
+  const endTimeSolidity = 1520275407;
 
-  deployer.deploy(ico, startTimeSolidity, endPreSale, end2week, end3week, endTimeSolidity, _rate, _goal, _cap, _wallet, foundation_wallet, community_reward_wallet, early_investor_wallet, team_wallet);
+  deployer.deploy(ico, startTimeSolidity, endTimeSolidity, _rate, _goal, _cap, _wallet, foundation_wallet, community_reward_wallet, early_investor_wallet, team_wallet);
 };

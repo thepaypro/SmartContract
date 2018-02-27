@@ -13,6 +13,7 @@ contract BasicToken is ERC20Basic {
   using SafeMath for uint256;
 
   mapping(address => uint256) balances;
+  mapping(address => bool) blockeds;
 
   /**
   * @dev transfer token for a specified address
@@ -24,9 +25,9 @@ contract BasicToken is ERC20Basic {
     require(_value <= balances[msg.sender]);
 
     // SafeMath.sub will throw if there is not enough balance.
-    balances[msg.sender] = balances[msg.sender].sub(_value);
-    balances[_to] = balances[_to].add(_value);
-    Transfer(msg.sender, _to, _value);
+    // balances[msg.sender] = balances[msg.sender].sub(_value);
+    // balances[_to] = balances[_to].add(_value);
+    // Transfer(msg.sender, _to, _value);
     return true;
   }
 

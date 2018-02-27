@@ -19,9 +19,6 @@ contract StandardCrowdsale {
 
   // start and end timestamps where investments are allowed (both inclusive)
   uint256 public startTime;
-  uint256 public endPreSale;
-  uint256 public end2week;
-  uint256 public end3week;
   uint256 public endTime;
 
   // address where funds are collected
@@ -43,20 +40,14 @@ contract StandardCrowdsale {
   event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount);
 
 
-  function StandardCrowdsale(uint256 _startTime, uint256 _endPreSale, uint256 _end2week, uint256 _end3week, uint256 _endTime, uint256 _base_rate, address _wallet) {
+  function StandardCrowdsale(uint256 _startTime, uint256 _endTime, uint256 _base_rate, address _wallet) {
     require(_startTime >= now);
-    require(_endPreSale >= _startTime);
-    require(_end2week >= _endPreSale);
-    require(_end3week >= _end2week);
-    require(_endTime >= _end3week);
+    require(_endTime >= _startTime);
     require(_base_rate > 0);
     require(_wallet != 0x0);
 
     token = createTokenContract();
     startTime = _startTime;
-    endPreSale = _endPreSale;
-    end2week = _end2week;
-    end3week = _end3week;
     endTime = _endTime;
     base_rate = _base_rate;
     wallet = _wallet;
