@@ -4,6 +4,7 @@ pragma solidity ^0.4.15;
 import './ownership/Ownable.sol';
 import './token/PausableToken.sol';
 import './token/MintableToken.sol';
+import './token/BlockableToken.sol';
 
 /**
  * @title The PYPToken contract
@@ -12,23 +13,13 @@ import './token/MintableToken.sol';
  * @author kkx 
  */
 
-contract PYPToken is MintableToken, PausableToken {
+contract PYPToken is MintableToken, PausableToken, BlockableToken {
     string  public  constant name = "PIP Token";
     string  public  constant symbol = "PIP";
     uint8   public  constant decimals = 18;
 
-    event WalletBlocked(address target, bool isRegistered);
-
     function PYPToken() {
         //Set token transfer paused
         paused = true;
-    }
-
-    function addBlocked(address target, bool isRegistered)
-        public
-        onlyOwner
-    {
-        blockeds[target] = isRegistered;
-        WalletBlocked(target, isRegistered);
     }
 }
