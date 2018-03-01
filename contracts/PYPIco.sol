@@ -77,6 +77,10 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
     token.pause();
   }
 
+  function changeAddressBlock(address beneficiary, bool isBlocked) onlyOwner {
+    token.addBlocked(beneficiary, isBlocked);
+  }
+
   // transfer pre sale tokend to investors
   function transferPreSaleTokens(uint256 _value, address beneficiary) onlyOwner {
     require(beneficiary != address(0));

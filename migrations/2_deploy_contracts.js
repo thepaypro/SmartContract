@@ -18,7 +18,7 @@ module.exports = function(deployer) {
   var early_investor_wallet = web3.eth.accounts[3];
   var team_wallet = web3.eth.accounts[4];
 
-  const startTimeSolidity = 1519843407;
+  const startTimeSolidity = 1519939229;
   const endTimeSolidity = 1520275407;
 
   deployer.deploy(ico, startTimeSolidity, endTimeSolidity, _rate, _goal, _cap, _wallet, foundation_wallet, community_reward_wallet, early_investor_wallet, team_wallet);
