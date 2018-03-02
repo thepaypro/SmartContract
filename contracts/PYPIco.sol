@@ -46,7 +46,7 @@ contract PYPIco is FinalizableCrowdsale {
    */
   function finalization() internal {
     // disable minting
-      assert(token.finishMinting());
+      token.finishMinting();
       token.unpause();
   }
 }
