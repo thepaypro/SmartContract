@@ -39,8 +39,6 @@ contract PYPIco is FinalizableCrowdsale {
     TokenPurchase(0x0, beneficiary, 0, _value);
   }
 
-  
-
   /**
    * finalization logics, mint fundation tokens proportionally to currently minted amount
    */
