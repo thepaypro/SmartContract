@@ -1,8 +1,8 @@
 pragma solidity ^0.4.11;
 
-import '../math/SafeMath.sol';
-import '../ownership/Ownable.sol';
-import '../StandardCrowdsale.sol';
+import './math/SafeMath.sol';
+import './ownership/Ownable.sol';
+import './StandardCrowdsale.sol';
 
 /**
  * @title FinalizableCrowdsale
@@ -22,7 +22,6 @@ contract FinalizableCrowdsale is StandardCrowdsale, Ownable {
    */
   function finalize() onlyOwner public {
     require(!isFinalized);
-    require(hasEnded());
 
     finalization();
     Finalized();
