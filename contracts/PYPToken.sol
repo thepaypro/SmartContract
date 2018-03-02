@@ -4,7 +4,6 @@ pragma solidity ^0.4.15;
 import './ownership/Ownable.sol';
 import './token/PausableToken.sol';
 import './token/MintableToken.sol';
-import './token/BlockableToken.sol';
 
 /**
  * @title The PYPToken contract
@@ -13,7 +12,7 @@ import './token/BlockableToken.sol';
  * @author kkx 
  */
 
-contract PYPToken is MintableToken, PausableToken, BlockableToken {
+contract PYPToken is MintableToken, PausableToken{
     string  public  constant name = "PIP Token";
     string  public  constant symbol = "PIP";
     uint8   public  constant decimals = 18;

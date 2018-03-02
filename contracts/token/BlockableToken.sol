@@ -24,4 +24,14 @@ contract BlockableToken is StandardToken, Ownable {
         WalletBlocked(target, isBlocked);
         return true;
     }
+
+
+    /**
+    * @dev Modifier to make a function callable only when the address is not blocked.
+    */
+    modifier whenNotBlocked(address target) {
+        require(!blockeds[target]);
+        _;
+    }
+
 }

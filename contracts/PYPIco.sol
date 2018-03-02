@@ -49,21 +49,21 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
   }
 
   // @return true if the transaction can buy tokens
-  function validPurchase() internal constant returns (bool) {
-    bool minimumInvestment = msg.value >= MINIMUM_INVESTMENT_MAIN;
+  // function validPurchase() internal constant returns (bool) {
+  //   bool minimumInvestment = msg.value >= MINIMUM_INVESTMENT_MAIN;
 
-    if (now > startTime && now < endTime) {
-      minimumInvestment = msg.value >= MINIMUM_INVESTMENT_PRESALE;
-    }
+  //   if (now > startTime && now < endTime) {
+  //     minimumInvestment = msg.value >= MINIMUM_INVESTMENT_PRESALE;
+  //   }
 
-    return super.validPurchase() && minimumInvestment;
-  }
+  //   return super.validPurchase() && minimumInvestment;
+  // }
 
-  // @return current exchange rate 
-  function getRate() public constant returns(uint){
-    require(now >= startTime);
-    return base_rate;
-  }
+  // // @return current exchange rate 
+  // function getRate() public constant returns(uint){
+  //   require(now >= startTime);
+  //   return base_rate;
+  // }
 
   // enable token tranferability
   function enableTokenTransferability() onlyOwner {
@@ -91,17 +91,17 @@ contract PYPIco is CappedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
     TokenPurchase(0x0, beneficiary, 0, _value);
   }
 
-  function changeMinimumInvestment(uint256 _value, uint _type) onlyOwner {
-    require(_value > 0);
+  // function changeMinimumInvestment(uint256 _value, uint _type) onlyOwner {
+  //   require(_value > 0);
 
-    if (_type == 0) {
-      MINIMUM_INVESTMENT_PRESALE = _value;
-    }
+  //   if (_type == 0) {
+  //     MINIMUM_INVESTMENT_PRESALE = _value;
+  //   }
 
-    if (_type == 1) {
-      MINIMUM_INVESTMENT_MAIN = _value;
-    }
-  }
+  //   if (_type == 1) {
+  //     MINIMUM_INVESTMENT_MAIN = _value;
+  //   }
+  // }
 
   function changeEndTime(uint256 _endTime) onlyOwner {
     require(_endTime >= now && _endTime >= startTime);
