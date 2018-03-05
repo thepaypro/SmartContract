@@ -17,7 +17,7 @@ contract PYPToken is MintableToken, PausableToken{
     string  public  constant symbol = "PIP";
     uint8   public  constant decimals = 18;
 
-    function PYPToken() {
+    function PYPToken() public {
         //Set token transfer paused
         paused = true;
     }

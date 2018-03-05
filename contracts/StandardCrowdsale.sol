@@ -1,7 +1,6 @@
 pragma solidity ^0.4.19;
 
 import './PYPToken.sol';
-import './math/SafeMath.sol';
 
 /**
  * @title Crowdsale
@@ -9,7 +8,6 @@ import './math/SafeMath.sol';
  */
 
 contract StandardCrowdsale{
-  using SafeMath for uint256;
 
   // The token being sold
   PYPToken public token;
@@ -23,7 +21,7 @@ contract StandardCrowdsale{
    */
   event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount);
 
-  function StandardCrowdsale() {
+  function StandardCrowdsale() public {
     token = createTokenContract(); 
   }
 

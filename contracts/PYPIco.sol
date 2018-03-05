@@ -2,36 +2,35 @@ pragma solidity ^0.4.19;
 
 import "./FinalizableCrowdsale.sol";
 import "./PYPToken.sol";
+import './StandardCrowdsale.sol';
 
-contract PYPIco is FinalizableCrowdsale {
+contract PYPIco is FinalizableCrowdsale, StandardCrowdsale {
 
 
-  function PYPIco()
+  function PYPIco() public
     StandardCrowdsale()
   {}
 
-  function createTokenContract() internal returns (PYPToken) {
-    return new PYPToken();
-  }
-
   // enable token tranferability
-  function enableTokenTransferability() onlyOwner {
+  function enableTokenTransferability() public onlyOwner {
     require(token != address(0));
     token.unpause();
   }
 
   // disable token tranferability
-  function disableTokenTransferability() onlyOwner {
+  function disableTokenTransferability() public onlyOwner {
     require(token != address(0));
     token.pause();
   }
 
-  function changeAddressBlock(address beneficiary, bool isBlocked) onlyOwner {
+  function changeAddressBlock(address beneficiary, bool isBlocked) public onlyOwner {
+    require(token != address(0));
     token.addBlocked(beneficiary, isBlocked);
   }
 
   // transfer tokens
-  function transferTokens(uint256 _value, address beneficiary) onlyOwner {
+  function transferTokens(uint256 _value, address beneficiary) public onlyOwner {
+    require(token != address(0));
     require(beneficiary != address(0));
 
     token.mint(beneficiary, _value);
@@ -40,7 +39,7 @@ contract PYPIco is FinalizableCrowdsale {
   }
 
   /**
-   * finalization logics, mint fundation tokens proportionally to currently minted amount
+   * finalization logics
    */
   function finalization() internal {
     // disable minting
